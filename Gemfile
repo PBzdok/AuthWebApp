@@ -52,8 +52,8 @@ group :development do
 end
 
 group :test do
-  gem 'minitest', '5.10.3'
-  gem 'minitest-reporters', '1.1.14'
+  gem 'minitest'
+  gem 'minitest-reporters'
   # Template testing
   gem 'rails-controller-testing'
 end
