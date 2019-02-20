@@ -1,2 +1,13 @@
-<h1>StaticPages#home</h1>
-<p>Find me in app/views/static_pages/home.html.erb</p>
+<% provide(:title, "Home") %>
+
+<head>
+  <title><%= yield(:title) %> | AuthWebApp</title>
+</head>
+
+<h1>AuthWebApp</h1>
+<p>This is the homepage for my multi-factor authentication application</p>
+<p>For help, visit <%= link_to "Help Page", static_pages_help_path %></p>
+<p><%= link_to "About", static_pages_about_path %></p>
+
+
+

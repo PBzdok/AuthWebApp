@@ -1,2 +1,10 @@
-<h1>StaticPages#help</h1>
-<p>Find me in app/views/static_pages/help.html.erb</p>
+<% provide(:title, "Help") %>
+
+<head>
+  <title><%= yield(:title) %> | AuthWebApp</title>
+</head>
+
+<h1>AuthWebApp - Help</h1>
+<p>For help contact me: philipp.bzdok@mailbox.org</p>
+
+
