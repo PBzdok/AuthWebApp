@@ -3,7 +3,9 @@
 one:
   name: MyString
   email: example@example.com
+  password_digest: <%= User.digest('foobar') %>
 
 two:
   name: MyString
   email: example2@example.com
+  password_digest: <%= User.digest('foobar') %>
