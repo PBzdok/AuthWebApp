@@ -52,8 +52,7 @@ group :development do
 end
 
 group :test do
-  gem 'minitest'
-  gem 'minitest-reporters'
+  gem 'minitest-rails'
   # Template testing
   gem 'rails-controller-testing'
 end
