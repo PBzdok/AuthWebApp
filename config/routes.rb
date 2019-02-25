@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   resources :users
   resources :messages
+  resources :account_activations, only: [:edit]
   root 'static_pages#home'
   get '/home', to: 'static_pages#home'
   get '/contact', to: 'static_pages#contact'
