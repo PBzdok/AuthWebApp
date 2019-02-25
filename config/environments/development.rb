@@ -19,7 +19,7 @@ Rails.application.configure do
 
     config.cache_store = :memory_store
     config.public_file_server.headers = {
-      'Cache-Control' => "public, max-age=#{2.days.to_i}"
+        'Cache-Control' => "public, max-age=#{2.days.to_i}"
     }
   else
     config.action_controller.perform_caching = false
@@ -32,9 +32,18 @@ Rails.application.configure do
 
   # Mailer Configuration
   config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.delivery_method = :test
-  host = 'localhost:3000'
+  host = "localhost:3000"
   config.action_mailer.default_url_options = { host: host, protocol: 'http' }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+      address: 'smtp.gmail.com',
+      port: 587,
+      domain: 'localhost',
+      user_name: 'authwebapp.mailer',
+      password: 'bounty95',
+      authentication: 'plain',
+      enable_starttls_auto: true
+  }
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
