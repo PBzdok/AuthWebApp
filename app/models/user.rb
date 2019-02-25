@@ -16,7 +16,8 @@ class User < ApplicationRecord
                     uniqueness: { case_sensitive: false }
 
   validates :password, presence: true,
-                       length: { minimum: 6 }
+                       length: { minimum: 6 },
+                       allow_nil: true
 
   # Returns true if the given token matches the digest.
   def authenticated?(remember_token)
