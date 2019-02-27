@@ -77,4 +77,12 @@ class UserTest < ActiveSupport::TestCase
     assert_not @user.authenticated?(:remember, '')
   end
 
+  test "associated messages should be destroyed" do
+    @user.save
+    @user.messages.create!(content: "Lorem ipsum")
+    assert_difference 'Message.count', -1 do
+      @user.destroy
+    end
+  end
+
 end
