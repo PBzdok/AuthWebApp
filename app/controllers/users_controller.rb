@@ -13,6 +13,7 @@ class UsersController < ApplicationController
   # GET /users/1.json
   def show
     @user = User.find(params[:id])
+    @messages = @user.messages.paginate(page: params[:page])
     redirect_to(root_url) && return unless @user.activated?
   end
 
