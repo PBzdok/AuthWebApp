@@ -18,4 +18,14 @@ class MessagesControllerTest < ActionDispatch::IntegrationTest
     end
     assert_redirected_to login_url
   end
+
+  test "should redirect destroy for wrong message" do
+    log_in_as(users(:one))
+    message = messages(:two)
+    assert_no_difference 'Message.count' do
+      delete message_url(message)
+    end
+    assert_redirected_to root_url
+  end
+
 end
