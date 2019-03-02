@@ -1,8 +1,9 @@
 class User < ApplicationRecord
   has_many :messages, dependent: :destroy
   has_secure_password
+  attr_encrypted :otp_secret, key: Rails.application.credentials.key
 
-  attr_accessor :remember_token, :activation_token, :reset_token
+  attr_accessor :remember_token, :activation_token, :reset_token, :totp
 
   before_save   :downcase_email
   before_create :create_activation_digest
@@ -33,6 +34,16 @@ class User < ApplicationRecord
              BCrypt::Engine.cost
            end
     BCrypt::Password.create(string, cost: cost)
+  end
+
+  # Creates and assigns the secret for otp authentication
+  def create_otp_secret
+    self.encrypted_otp_secret = ROTP::Base32.random_base32
+  end
+
+  # Creates and assigns the totp
+  def create_totp
+    self.totp = ROTP::TOTP.new(encrypted_otp_secret)
   end
 
   # Returns true if the given token matches the digest.

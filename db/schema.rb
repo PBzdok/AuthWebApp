@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_27_190554) do
+ActiveRecord::Schema.define(version: 2019_03_02_123118) do
 
   create_table "messages", force: :cascade do |t|
     t.string "content"
@@ -32,6 +32,8 @@ ActiveRecord::Schema.define(version: 2019_02_27_190554) do
     t.datetime "activated_at"
     t.string "reset_digest"
     t.datetime "reset_sent_at"
+    t.string "encrypted_otp_secret"
+    t.boolean "totp_activated"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
