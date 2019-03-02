@@ -40,6 +40,9 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1
   def update
     if @user.update(user_params)
+      @user.create_totp if user_params[:totp_activated] == '1'
+      p @user.otp_secret
+      p @user.totp
       flash[:info] = "User successfully updated!"
       redirect_to @user
     else
