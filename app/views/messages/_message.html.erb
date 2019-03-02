@@ -3,5 +3,9 @@
   <span class="content"><%= message.content %></span>
   <span class="timestamp">
     Created <%= time_ago_in_words(message.created_at) %> ago.
+    <% if current_user?(message.user) %>
+      <%= link_to "delete", message, method: :delete,
+                  data: { confirm: "Are you sure?" } %>
+    <% end %>
   </span>
 </li>

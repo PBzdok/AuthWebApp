@@ -1,6 +1,10 @@
 class StaticPagesController < ApplicationController
   def home
-    @message = current_user.messages.build if logged_in?
+    if logged_in?
+      @message = current_user.messages.build
+      @feed_items = current_user.feed.paginate(page: params[:page])
+    end
+
   end
 
   def contact
