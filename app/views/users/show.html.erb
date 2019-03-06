@@ -14,7 +14,7 @@
     </ol>
     <%= will_paginate @messages %>
 
-    <h3>Multi-Factor Authentication (<%= @user.multi_factor_count %>)</h3>
+    <h3>Multi-Factor Authentication (<%= @user.multi_factor_methods.count %>)</h3>
     <ol class="auth_methods">
       <%= render 'auth_methods' %>
     </ol>

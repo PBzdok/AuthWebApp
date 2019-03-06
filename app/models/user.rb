@@ -95,11 +95,6 @@ class User < ApplicationRecord
     auth_methods.select { |_, v| v == true }
   end
 
-  def multi_factor_count
-    auth_methods = { totp: totp_activated, u2f: false, bio: false } # # todo: reference other methods
-    auth_methods.select { |_, v| v == true }.count
-  end
-
   private
 
   # Converts email to all lower-case.
