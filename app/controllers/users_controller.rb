@@ -42,7 +42,11 @@ class UsersController < ApplicationController
   def update
     if @user.update(user_params)
       flash[:info] = "User successfully updated!"
-      redirect_to @user
+      respond_to do |format|
+        format.html { redirect_to @user }
+        format.js
+      end
+      # redirect_to @user
     else
       render 'edit'
     end
