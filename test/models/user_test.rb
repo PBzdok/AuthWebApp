@@ -4,7 +4,6 @@ class UserTest < ActiveSupport::TestCase
   def setup
     @user = User.new(name: "Example User", email: "user@example.com",
                      password: "foobar", password_confirmation: "foobar")
-
   end
 
   test "should be valid" do
@@ -83,6 +82,48 @@ class UserTest < ActiveSupport::TestCase
     assert_difference 'Message.count', -1 do
       @user.destroy
     end
+  end
+
+  test "should return authentication methods" do
+    @user.totp_activated = true
+    @user.save
+    assert_not_empty @user.multi_factor_methods
+  end
+
+  test "should return empty authentication methods list" do
+    @user.totp_activated = false
+    @user.save
+    assert_empty @user.multi_factor_methods
+  end
+
+  test "create otp_secret on user creation" do
+    new_user = User.create(name: "Example User", email: "user@example.com",
+                password: "foobar", password_confirmation: "foobar")
+    assert_not_nil new_user.otp_secret
+  end
+
+  test "should create new totp" do
+    new_user = User.create(name: "Example User", email: "user@example.com",
+                           password: "foobar", password_confirmation: "foobar")
+    new_user.create_totp
+    assert_not_nil new_user.totp
+  end
+
+  test "should successfully verify current otp with created totp object" do
+    new_user = User.create(name: "Example User", email: "user@example.com",
+                           password: "foobar", password_confirmation: "foobar")
+    new_user.create_totp
+    current_totp = new_user.totp.now
+    assert new_user.totp.verify(current_totp)
+  end
+
+  test "should successfully verify current otp with re-created totp object" do
+    new_user = User.create(name: "Example User", email: "user@example.com",
+                           password: "foobar", password_confirmation: "foobar")
+    new_user.create_totp
+    current_totp = new_user.totp.now
+    new_user.create_totp
+    assert new_user.totp.verify(current_totp)
   end
 
 end

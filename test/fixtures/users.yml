@@ -6,6 +6,7 @@ one:
   password_digest: <%= User.digest('foobar') %>
   activated: true
   activated_at: <%= Time.zone.now %>
+  totp_activated: true
 
 two:
   name: MyString
