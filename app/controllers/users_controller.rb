@@ -12,6 +12,7 @@ class UsersController < ApplicationController
   def show
     @user = User.find(params[:id])
     @messages = @user.messages.paginate(page: params[:page])
+    @auth_methods = @user.multi_factor_methods
     redirect_to(root_url) && return unless @user.activated?
   end
 
@@ -40,9 +41,6 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1
   def update
     if @user.update(user_params)
-      @user.create_totp if user_params[:totp_activated] == '1'
-      p @user.otp_secret
-      p @user.totp
       flash[:info] = "User successfully updated!"
       redirect_to @user
     else
@@ -61,7 +59,7 @@ class UsersController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def user_params
-    params.require(:user).permit(:name, :email, :password, :password_confirmation, :totp_activated)
+    params.require(:user).permit(:name, :email, :password, :password_confirmation, :totp, :totp_activated)
   end
 
   # Use callbacks to share common setup or constraints between actions.

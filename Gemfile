@@ -31,8 +31,8 @@ gem 'bootstrap-will_paginate', '~> 1.0.0'
 gem 'will_paginate', '~> 3.1.6'
 # Time-based One-Time Password library
 gem 'rotp', '~> 4.1.0'
-# Store encrypted attributes per user
-gem 'attr_encrypted', '~> 3.1.0'
+# QR-Code generation
+gem 'rqrcode', '~> 0.10.1'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

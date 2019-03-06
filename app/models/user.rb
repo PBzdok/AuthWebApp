@@ -35,9 +35,10 @@ class User < ApplicationRecord
     BCrypt::Password.create(string, cost: cost)
   end
 
-  # Creates and assigns the totp
+  # Creates and assigns the totp and returns the qr code
   def create_totp
     self.totp = ROTP::TOTP.new(otp_secret)
+    RQRCode::QRCode.new(totp.provisioning_uri('AuthWebApp'), size: 8, level: :h)
   end
 
   # Returns true if the given token matches the digest.
@@ -89,6 +90,16 @@ class User < ApplicationRecord
     Message.where("user_id = ?", id)
   end
 
+  def multi_factor_methods
+    auth_methods = { totp: totp_activated, u2f: false, bio: false } # todo: reference other methods
+    auth_methods.select { |_, v| v == true }
+  end
+
+  def multi_factor_count
+    auth_methods = { totp: totp_activated, u2f: false, bio: false } # # todo: reference other methods
+    auth_methods.select { |_, v| v == true }.count
+  end
+
   private
 
   # Converts email to all lower-case.
@@ -102,7 +113,7 @@ class User < ApplicationRecord
     self.activation_digest = User.digest(activation_token)
   end
 
-  # Creates and assigns the secret for otp authentication
+  # Creates and assigns the secret for otp authentication. Is not securely saved!
   def create_otp_secret
     self.otp_secret = ROTP::Base32.random_base32
   end
