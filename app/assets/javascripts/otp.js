@@ -22,7 +22,6 @@ $('#verify_top_btn').on('click', function () {
         },
         dataType: "json",
         success: function (data) {
-            console.log(data);
             if (data["totp_valid"]) {
                 $('#otp_modal').modal('hide');
                 $("#user_totp_activated").prop("checked", true);
@@ -31,6 +30,7 @@ $('#verify_top_btn').on('click', function () {
             else {
                 document.getElementById("otp").style.borderColor = "red";
                 alert("TOTP wrong!");
+                $("#user_totp_activated").prop("checked", false);
             }
         },
         error: function (data) {
@@ -38,5 +38,4 @@ $('#verify_top_btn').on('click', function () {
             console.log(data)
         }
     });
-
 });
