@@ -126,4 +126,10 @@ class UserTest < ActiveSupport::TestCase
     assert new_user.totp.verify(current_totp)
   end
 
+  test "should successfully verify current otp with user method" do
+    new_user = User.create(name: "Example User", email: "user@example.com",
+                           password: "foobar", password_confirmation: "foobar")
+    assert new_user.verify_totp(ROTP::TOTP.new(new_user.otp_secret).now)
+  end
+
 end
