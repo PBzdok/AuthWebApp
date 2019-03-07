@@ -9,9 +9,8 @@ $('#otp_modal').on('hide.bs.modal', function () {
 });
 
 $('#verify_top_btn').on('click', function () {
-    const applicationPath = location.pathname;
+    const id = location.pathname.split("/")[2];
     let totp = document.getElementById("otp").value;
-    let id = applicationPath.split("/")[2];
     $.ajax({
         type: "GET",
         url: `/users/${id}/verify_otp.json`,
