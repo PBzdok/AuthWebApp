@@ -42,10 +42,7 @@ class UsersController < ApplicationController
   def update
     if @user.update(user_params)
       flash[:info] = "User successfully updated!"
-      respond_to do |format|
-        format.html { redirect_to @user }
-        format.js
-      end
+      redirect_to @user
     else
       render 'edit'
     end
@@ -60,10 +57,15 @@ class UsersController < ApplicationController
 
   # GET /users/:id/verify_otp
   def verify_otp
-    if @user.verify_totp(user_params[:totp])
-      render json: { 'totp_valid' => true }
-    else
-      render json: { 'totp_valid' => false }
+    respond_to do |format|
+      format.html { redirect_to @user }
+      format.json do
+        if @user.verify_totp(user_params[:totp])
+          render json: { 'totp_valid' => true }
+        else
+          render json: { 'totp_valid' => false }
+        end
+      end
     end
   end
 
@@ -84,4 +86,5 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     redirect_to(root_url) unless current_user?(@user)
   end
+
 end

@@ -14,7 +14,7 @@ $('#verify_top_btn').on('click', function () {
     let id = applicationPath.split("/")[2];
     $.ajax({
         type: "GET",
-        url: `/users/${id}/verify_otp`,
+        url: `/users/${id}/verify_otp.json`,
         data: {
             user: {
                 totp: totp
@@ -22,14 +22,21 @@ $('#verify_top_btn').on('click', function () {
         },
         dataType: "json",
         success: function (data) {
-            console.log("success");
-            console.log(data)
+            console.log(data);
+            if (data["totp_valid"]) {
+                $('#otp_modal').modal('hide');
+                $("#user_totp_activated").prop("checked", true);
+                alert("TOTP successfully confirmed!")
+            }
+            else {
+                document.getElementById("otp").style.borderColor = "red";
+                alert("TOTP wrong!");
+            }
         },
         error: function (data) {
             console.error("Asynchronous request failed!");
             console.log(data)
         }
     });
-    $('#otp_modal').modal('hide');
-    $("#user_totp_activated").prop("checked", true); // todo: replace with ajax call to verify otp by user model
+
 });
