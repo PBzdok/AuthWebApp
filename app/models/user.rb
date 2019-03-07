@@ -35,10 +35,15 @@ class User < ApplicationRecord
     BCrypt::Password.create(string, cost: cost)
   end
 
-  # Creates and assigns the totp and returns the qr code
+  # Creates and assigns the totp object and returns the qr code
   def create_totp
     self.totp = ROTP::TOTP.new(otp_secret)
     RQRCode::QRCode.new(totp.provisioning_uri('AuthWebApp'), size: 8, level: :h)
+  end
+
+  # Verify TOTP value with temporal totp object
+  def verify_totp(password)
+    ROTP::TOTP.new(otp_secret).verify(password)
   end
 
   # Returns true if the given token matches the digest.

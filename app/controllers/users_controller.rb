@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
-  before_action :logged_in_user, only: [:index, :edit, :update, :destroy]
-  before_action :correct_user, only: [:edit, :update, :destroy]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :verify_otp]
+  before_action :logged_in_user, only: [:index, :edit, :update, :destroy, :verify_otp]
+  before_action :correct_user, only: [:edit, :update, :destroy, :verify_otp]
 
   # GET /users
   def index
@@ -46,7 +46,6 @@ class UsersController < ApplicationController
         format.html { redirect_to @user }
         format.js
       end
-      # redirect_to @user
     else
       render 'edit'
     end
@@ -59,11 +58,20 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
 
+  # GET /users/:id/verify_otp
+  def verify_otp
+    if @user.verify_totp(user_params[:totp])
+      render json: { 'totp_valid' => true }
+    else
+      render json: { 'totp_valid' => false }
+    end
+  end
+
   private
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def user_params
-    params.require(:user).permit(:name, :email, :password, :password_confirmation, :totp, :totp_activated)
+    params.require(:user).permit(:name, :email, :password, :password_confirmation, :totp_activated, :totp)
   end
 
   # Use callbacks to share common setup or constraints between actions.
