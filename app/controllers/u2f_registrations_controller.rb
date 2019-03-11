@@ -1,4 +1,6 @@
 class U2fRegistrationsController < ApplicationController
+  skip_before_action :verify_authenticity_token
+
   def new
     # Generate one for each version of U2F, currently only `U2F_V2`
     @registration_requests = u2f.registration_requests
@@ -28,7 +30,7 @@ class U2fRegistrationsController < ApplicationController
     end
 
     # save a reference to your database
-    Registration.create!(certificate: reg.certificate,
+    U2fRegistration.create!(certificate: reg.certificate,
                          key_handle:  reg.key_handle,
                          public_key:  reg.public_key,
                          counter:     reg.counter)

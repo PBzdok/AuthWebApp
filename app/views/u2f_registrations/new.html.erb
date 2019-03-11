@@ -9,13 +9,9 @@
     let appId = <%= @app_id.to_json.html_safe %>;
     let registerRequests = <%= @registration_requests.to_json.html_safe %>;
     let signRequests = <%= @sign_requests.as_json.to_json.html_safe %>;
-    console.log(appId);
-    console.log(registerRequests);
-    console.log(signRequests);
 
     u2f.register(appId, registerRequests, signRequests, function(registerResponse) {
         var form, reg;
-        console.log("u2f.register called");
         if (registerResponse.errorCode) {
             return alert("Registration error: " + registerResponse.errorCode);
         }
