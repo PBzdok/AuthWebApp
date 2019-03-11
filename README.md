@@ -22,3 +22,5 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
+
+Run server with : rails s -b 'ssl://0.0.0.0:3000?key=.ssl/localhost.key&cert=.ssl/localhost.crt'
