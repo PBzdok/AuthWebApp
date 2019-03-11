@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_11_145716) do
+ActiveRecord::Schema.define(version: 2019_03_11_171640) do
 
   create_table "messages", force: :cascade do |t|
     t.string "content"
@@ -18,6 +18,15 @@ ActiveRecord::Schema.define(version: 2019_03_11_145716) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_messages_on_user_id"
+  end
+
+  create_table "u2f_registrations", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "certificate"
+    t.string "key_handle"
+    t.string "public_key"
+    t.integer "counter"
   end
 
   create_table "users", force: :cascade do |t|

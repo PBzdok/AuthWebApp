@@ -8,6 +8,8 @@ Rails.application.routes.draw do
   get '/login', to: 'sessions#new'
   post '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
+  get '/u2f_registration', to: 'u2f_registrations#new'
+  post '/u2f_registration', to: 'u2f_registrations#create'
   resources :users do
     get :verify_otp, on: :member
   end

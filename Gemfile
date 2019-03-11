@@ -33,6 +33,8 @@ gem 'will_paginate', '~> 3.1.6'
 gem 'rotp', '~> 4.1.0'
 # QR-Code generation
 gem 'rqrcode', '~> 0.10.1'
+# Ruby U2F library
+gem 'u2f', '~> 1.0.0'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
