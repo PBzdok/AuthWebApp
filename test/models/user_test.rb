@@ -98,7 +98,7 @@ class UserTest < ActiveSupport::TestCase
 
   test "create otp_secret on user creation" do
     new_user = User.create(name: "Example User", email: "user@example.com",
-                password: "foobar", password_confirmation: "foobar")
+                           password: "foobar", password_confirmation: "foobar")
     assert_not_nil new_user.otp_secret
   end
 
@@ -130,6 +130,12 @@ class UserTest < ActiveSupport::TestCase
     new_user = User.create(name: "Example User", email: "user@example.com",
                            password: "foobar", password_confirmation: "foobar")
     assert new_user.verify_totp(ROTP::TOTP.new(new_user.otp_secret).now)
+  end
+
+  test "should successfully create keypair" do
+    new_user = User.create(name: "Example User", email: "user@example.com",
+                           password: "foobar", password_confirmation: "foobar")
+    assert_not_nil new_user.public_key && new_user.private_key
   end
 
 end
