@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   has_many :messages, dependent: :destroy
+  has_many :u2f_registrations, dependent: :destroy
   has_secure_password
 
   attr_accessor :remember_token, :activation_token, :reset_token, :totp

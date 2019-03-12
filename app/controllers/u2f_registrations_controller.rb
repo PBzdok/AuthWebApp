@@ -11,12 +11,15 @@ class U2fRegistrationsController < ApplicationController
       session.delete(:challenges)
     end
 
-    U2fRegistration.create!(certificate: reg.certificate,
-                            key_handle:  reg.key_handle,
-                            public_key:  reg.public_key,
-                            counter:     reg.counter)
-
-    p 'Registered!'
+    @u2f_registration = current_user.u2f_registrations.build(certificate: reg.certificate,
+                                                             key_handle: reg.key_handle,
+                                                             public_key: reg.public_key,
+                                                             counter: reg.counter)
+    if @u2f_registration.save
+      p 'Registered!'
+    else
+      p 'Error on saving!'
+    end
   end
 
   private
