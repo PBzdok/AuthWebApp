@@ -1,0 +1,27 @@
+<h1>Test U2F Authentication</h1>
+
+<form action="/u2f_authentication" method="post">
+  <input type="hidden" name="response">
+</form>
+
+<script>
+    // render requests from server into Javascript format
+    var signRequests = <%= @sign_requests.to_json.html_safe %>;
+    var challenge = <%= @challenge.to_json.html_safe %>;
+    var appId = <%= @app_id.to_json.html_safe %>;
+
+    u2f.sign(appId, challenge, signRequests, function (signResponse) {
+        var form, reg;
+
+        if (signResponse.errorCode) {
+            return alert("Authentication error: " + signResponse.errorCode);
+        }
+
+        form = document.forms[0];
+        response = document.querySelector('[name=response]');
+
+        response.value = JSON.stringify(signResponse);
+
+        form.submit();
+    });
+</script>
