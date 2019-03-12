@@ -5,9 +5,9 @@ class Message < ApplicationRecord
 
   def sign_content(keypair)
     self.signature = keypair.sign_pss("SHA256",
-                                  content,
-                                  salt_length: :max,
-                                  mgf1_hash: "SHA256")
+                                      content,
+                                      salt_length: :max,
+                                      mgf1_hash: "SHA256")
   end
 
   def verify_signature(keypair)
