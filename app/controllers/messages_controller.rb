@@ -1,6 +1,7 @@
 class MessagesController < ApplicationController
-  before_action :logged_in_user, only: [:create, :destroy]
-  before_action :correct_user,   only: :destroy
+  before_action :set_message, only: [:edit, :update, :destroy]
+  before_action :logged_in_user, only: [:create, :destroy, :sign_content]
+  before_action :correct_user, only: [:destroy, :sign_content]
 
   def create
     @message = current_user.messages.build(message_params)
@@ -13,6 +14,32 @@ class MessagesController < ApplicationController
     end
   end
 
+  # GET /messages/:id/edit
+  def edit
+    if multi_factor_enabled
+    else
+      flash[:error] = "Activate multi factor authentication to sign messages!"
+      redirect_to root_url
+    end
+  end
+
+  # PATCH/PUT /messages/:id
+  def update
+    if message_params[:authenticated]
+      pkey = OpenSSL::PKey::RSA.new(current_user.private_key)
+      @message.sign_content(pkey)
+      p @message.signature
+      if @message.save
+        render json: { 'signature_created' => true }
+      else
+        p 'Updateing went wrong'
+        render json: { 'signature_created' => false }
+      end
+    else
+      render 'edit'
+    end
+  end
+
   def destroy
     @message.destroy
     flash[:success] = "Message deleted"
@@ -21,12 +48,21 @@ class MessagesController < ApplicationController
 
   private
 
+  # Use callbacks to share common setup or constraints between actions.
+  def set_message
+    @message = Message.find(params[:id])
+  end
+
   def message_params
-    params.require(:message).permit(:content)
+    params.require(:message).permit(:content, :authenticated)
   end
 
   def correct_user
     @message = current_user.messages.find_by(id: params[:id])
     redirect_to root_url if @message.nil?
+  end
+
+  def multi_factor_enabled
+    current_user.multi_factor_methods.any?
   end
 end

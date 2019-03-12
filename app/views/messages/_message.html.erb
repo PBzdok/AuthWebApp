@@ -1,9 +1,11 @@
 <li id="message-<%= message.id %>">
   <span class="user"><%= link_to message.user.name, message.user %></span>
   <span class="content"><%= message.content %></span>
+  <span class="signature"><%= message.signature %></span>
   <span class="timestamp">
     Created <%= time_ago_in_words(message.created_at) %> ago.
     <% if current_user?(message.user) %>
+      <%= link_to "sign", edit_message_path(message) %>
       <%= link_to "delete", message, method: :delete,
                   data: { confirm: "Are you sure?" } %>
     <% end %>
