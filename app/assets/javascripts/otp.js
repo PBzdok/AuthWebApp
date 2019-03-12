@@ -25,8 +25,7 @@ $('#verify_top_btn').on('click', function () {
                 $('#otp_modal').modal('hide');
                 $("#user_totp_activated").prop("checked", true);
                 alert("TOTP successfully confirmed!")
-            }
-            else {
+            } else {
                 document.getElementById("otp").style.borderColor = "red";
                 alert("TOTP wrong!");
                 $("#user_totp_activated").prop("checked", false);
@@ -40,7 +39,7 @@ $('#verify_top_btn').on('click', function () {
 });
 
 $('#sign_button').on('click', function () {
-   $('#authentication_modal').modal();
+    $('#authentication_modal').modal();
 });
 
 $('#authenticate_otp_btn').on('click', function () {
@@ -67,16 +66,9 @@ $('#authenticate_otp_btn').on('click', function () {
                         message: {
                             authenticated: true
                         }
-                    },
-                    dataType: "json",
-                    success: function (data) {
-                        if (data["signature_created"]) {
-                            console.log("SUCCESS!")
-                        }
                     }
                 })
-            }
-            else {
+            } else {
                 document.getElementById("otp").style.borderColor = "red";
                 alert("TOTP wrong!");
             }

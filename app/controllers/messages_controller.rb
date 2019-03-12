@@ -30,11 +30,11 @@ class MessagesController < ApplicationController
       @message.sign_content(pkey)
       p @message.signature
       if @message.save
-        render json: { 'signature_created' => true }
+        flash[:info] = "Signature successfully created!"
       else
-        p 'Updateing went wrong'
-        render json: { 'signature_created' => false }
+        flash[:error] = "Signature not created!"
       end
+      redirect_to root_url
     else
       render 'edit'
     end
