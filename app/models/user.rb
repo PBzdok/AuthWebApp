@@ -5,7 +5,7 @@ class User < ApplicationRecord
 
   attr_accessor :remember_token, :activation_token, :reset_token, :totp
 
-  before_create :create_activation_digest, :create_otp_secret
+  before_create :create_activation_digest, :create_otp_secret, :create_rsa_keypair
   before_save   :downcase_email
 
   validates :name, presence: true,
@@ -117,6 +117,12 @@ class User < ApplicationRecord
   # Creates and assigns the secret for otp authentication. Is not securely saved!
   def create_otp_secret
     self.otp_secret = ROTP::Base32.random_base32
+  end
+
+  def create_rsa_keypair
+    pkey = OpenSSL::PKey::RSA.new(2048)
+    self.public_key = pkey.public_key.to_pem
+    self.private_key = pkey.to_pem
   end
 
 end

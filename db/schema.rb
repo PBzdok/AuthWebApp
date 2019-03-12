@@ -10,13 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_12_114902) do
+ActiveRecord::Schema.define(version: 2019_03_12_134709) do
 
   create_table "messages", force: :cascade do |t|
     t.string "content"
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "signature"
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
@@ -46,6 +47,8 @@ ActiveRecord::Schema.define(version: 2019_03_12_114902) do
     t.boolean "totp_activated"
     t.string "otp_secret"
     t.boolean "u2f_activated"
+    t.string "public_key"
+    t.string "private_key"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
