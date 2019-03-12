@@ -96,7 +96,7 @@ class User < ApplicationRecord
   end
 
   def multi_factor_methods
-    auth_methods = { totp: totp_activated, u2f: false, bio: false } # todo: reference other methods
+    auth_methods = { totp: totp_activated, u2f: u2f_activated}
     auth_methods.select { |_, v| v == true }
   end
 

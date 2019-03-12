@@ -1,0 +1,43 @@
+<div class="modal fade" id="u2f_modal" tabindex="-1" role="dialog" aria-labelledby="u2f_modal_label">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="u2f_modal_label">U2F registration</h4>
+      </div>
+      <div class="modal-body">
+        <p>Touch the security key device...</p>
+        <form id="hidden_u2f_form" action="/u2f_registration" method="post">
+          <input type="hidden" name="response">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    // render requests from server into Javascript format
+    let appId = <%= @app_id.to_json.html_safe %>;
+    let registerRequests = <%= @registration_requests.to_json.html_safe %>;
+    let signRequests = <%= @sign_requests.as_json.to_json.html_safe %>;
+    u2f.register(appId, registerRequests, signRequests, function (registerResponse) {
+        var form, reg;
+        if (registerResponse.errorCode) {
+            $('#u2f_modal').modal('hide');
+            return alert("Registration error: "
+                + registerResponse.errorCode
+                + "\nMore at: https://developers.yubico.com/U2F/Libraries/Client_error_codes.html");
+        }
+
+        form = document.getElementById('hidden_u2f_form');
+        let response = document.querySelector('[name=response]');
+
+        response.value = JSON.stringify(registerResponse);
+
+        form.submit();
+        $('#u2f_modal').modal('hide');
+        $("#user_u2f_activated").prop("checked", true);
+        alert("U2F successfully initialized");
+    });
+</script>

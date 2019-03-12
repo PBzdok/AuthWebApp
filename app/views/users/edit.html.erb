@@ -23,10 +23,18 @@
         <span>TOTP activated</span>
       <% end %>
 
+      <%= f.label :u2f_activated, class: "checkbox inline" do %>
+        <%= f.check_box :u2f_activated %>
+        <span>U2F activated</span>
+      <% end %>
+
       <%= f.submit "Save changes", class: "btn btn-primary" %>
     <% end %>
   </div>
 </div>
 
 <%= render 'layouts/otp_modal' %>
+<%= render 'layouts/u2f_modal' %>
 <%= javascript_include_tag "otp"  %>
+<%= javascript_include_tag "u2f"  %>
+

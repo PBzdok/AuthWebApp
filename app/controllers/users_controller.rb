@@ -23,6 +23,7 @@ class UsersController < ApplicationController
 
   # GET /users/1/edit
   def edit
+    initialize_u2f
     @user = User.find(params[:id])
   end
 
@@ -73,7 +74,7 @@ class UsersController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def user_params
-    params.require(:user).permit(:name, :email, :password, :password_confirmation, :totp_activated, :totp)
+    params.require(:user).permit(:name, :email, :password, :password_confirmation, :totp_activated, :totp, :u2f_activated)
   end
 
   # Use callbacks to share common setup or constraints between actions.
@@ -87,4 +88,21 @@ class UsersController < ApplicationController
     redirect_to(root_url) unless current_user?(@user)
   end
 
+  def u2f
+    @u2f ||= U2F::U2F.new(request.base_url)
+  end
+
+  def initialize_u2f
+    # Generate one for each version of U2F, currently only `U2F_V2`
+    @registration_requests = u2f.registration_requests
+
+    # Store challenges. We need them for the verification step
+    session[:challenges] = @registration_requests.map(&:challenge)
+
+    # Fetch existing Registrations from your db and generate SignRequests
+    key_handles = U2fRegistration.all.map(&:key_handle)
+    @sign_requests = u2f.authentication_requests(key_handles)
+
+    @app_id = u2f.app_id
+  end
 end
