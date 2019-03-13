@@ -33,6 +33,7 @@ class MessagesController < ApplicationController
       else
         flash[:error] = "Signature not created!"
       end
+      session.delete(:authentication_token)
       redirect_to root_url
     else
       flash[:error] = "Multi factor authentication failed! Please check profile settings."
@@ -67,7 +68,6 @@ class MessagesController < ApplicationController
   end
 
   def multi_factor_authenticated
-    p "Token #{session[:authentication_token]}"
     message_params[:authentication_token] == session[:authentication_token] && message_params[:authenticated]
   end
 end
