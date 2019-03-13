@@ -62,7 +62,9 @@ class UsersController < ApplicationController
       format.html { redirect_to @user }
       format.json do
         if @user.verify_totp(user_params[:totp])
-          render json: { 'totp_valid' => true }
+          session[:authentication_token] = @user.authentication_token
+          render json: { 'totp_valid' => true,
+                         'authentication_token' => @user.authentication_token }
         else
           render json: { 'totp_valid' => false }
         end

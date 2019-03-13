@@ -25,10 +25,9 @@ class MessagesController < ApplicationController
 
   # PATCH/PUT /messages/:id
   def update
-    if message_params[:authenticated]
+    if multi_factor_authenticated
       pkey = OpenSSL::PKey::RSA.new(current_user.private_key)
       @message.sign_content(pkey)
-      p @message.signature
       if @message.save
         flash[:info] = "Signature successfully created!"
       else
@@ -36,7 +35,8 @@ class MessagesController < ApplicationController
       end
       redirect_to root_url
     else
-      render 'edit'
+      flash[:error] = "Multi factor authentication failed! Please check profile settings."
+      redirect_to 'edit'
     end
   end
 
@@ -54,7 +54,7 @@ class MessagesController < ApplicationController
   end
 
   def message_params
-    params.require(:message).permit(:content, :authenticated)
+    params.require(:message).permit(:content, :authenticated, :authentication_token)
   end
 
   def correct_user
@@ -64,5 +64,10 @@ class MessagesController < ApplicationController
 
   def multi_factor_enabled
     current_user.multi_factor_methods.any?
+  end
+
+  def multi_factor_authenticated
+    p "Token #{session[:authentication_token]}"
+    message_params[:authentication_token] == session[:authentication_token] && message_params[:authenticated]
   end
 end

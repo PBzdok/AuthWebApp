@@ -64,7 +64,8 @@ $('#authenticate_otp_btn').on('click', function () {
                     url: `/messages/${message_id}`,
                     data: {
                         message: {
-                            authenticated: true
+                            authenticated: true,
+                            authentication_token : data["authentication_token"]
                         }
                     }
                 })

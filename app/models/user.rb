@@ -3,7 +3,7 @@ class User < ApplicationRecord
   has_many :u2f_registrations, dependent: :destroy
   has_secure_password
 
-  attr_accessor :remember_token, :activation_token, :reset_token, :totp
+  attr_accessor :remember_token, :activation_token, :reset_token, :totp, :authentication_token
 
   before_create :create_activation_digest, :create_otp_secret, :create_rsa_keypair
   before_save   :downcase_email
@@ -44,6 +44,7 @@ class User < ApplicationRecord
 
   # Verify TOTP value with temporal totp object
   def verify_totp(password)
+    self.authentication_token = User.new_token
     ROTP::TOTP.new(otp_secret).verify(password)
   end
 
