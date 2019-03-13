@@ -63,10 +63,10 @@ class UsersController < ApplicationController
       format.json do
         if @user.verify_totp(user_params[:totp])
           session[:authentication_token] = @user.authentication_token
-          render json: { 'totp_valid' => true,
-                         'authentication_token' => @user.authentication_token }
+          render json: { totp_valid: true,
+                         authentication_token: @user.authentication_token }
         else
-          render json: { 'totp_valid' => false }
+          render json: { totp_valid: false }
         end
       end
     end
@@ -88,10 +88,6 @@ class UsersController < ApplicationController
   def correct_user
     @user = User.find(params[:id])
     redirect_to(root_url) unless current_user?(@user)
-  end
-
-  def u2f
-    @u2f ||= U2F::U2F.new(request.base_url)
   end
 
   def initialize_u2f

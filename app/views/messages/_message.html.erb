@@ -1,7 +1,6 @@
 <li id="message-<%= message.id %>">
   <span class="user"><%= link_to message.user.name, message.user %></span>
-  <span class="content"><%= message.content %></span>
-  <span class="signature"><%= message.signature %></span>
+  <span class="content">Content: <br><%= message.content %></span>
   <span class="timestamp">
     Created <%= time_ago_in_words(message.created_at) %> ago.
     <% if current_user?(message.user) %>
@@ -10,4 +9,6 @@
                   data: { confirm: "Are you sure?" } %>
     <% end %>
   </span>
+  <br>
+  <span class="signature">Signature: <br><%= message.signature %></span>
 </li>

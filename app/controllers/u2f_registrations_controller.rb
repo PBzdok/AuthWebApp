@@ -21,10 +21,4 @@ class U2fRegistrationsController < ApplicationController
       p 'Error on saving!'
     end
   end
-
-  private
-
-  def u2f
-    @u2f ||= U2F::U2F.new(request.base_url)
-  end
 end

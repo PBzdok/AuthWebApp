@@ -1,22 +1,6 @@
 class U2fAuthenticationsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  def new
-    # Fetch existing Registrations from your db
-    key_handles = U2fRegistration.all.map(&:key_handle)
-    return 'Need to register first' if key_handles.empty?
-
-    # Generate SignRequests
-    @app_id = u2f.app_id
-    @sign_requests = u2f.authentication_requests(key_handles)
-    @challenge = u2f.challenge
-
-    # Store challenge. We need it for the verification step
-    session[:challenge] = @challenge
-
-    render 'u2f_authentications/new'
-  end
-
   def create
     response = U2F::SignResponse.load_from_json(params[:response])
 
@@ -35,13 +19,16 @@ class U2fAuthenticationsController < ApplicationController
     end
 
     registration.update(counter: response.counter)
-
-    p 'Authenticated!'
+    sign_message
+    redirect_to root_url
   end
 
   private
 
-  def u2f
-    @u2f ||= U2F::U2F.new(request.base_url)
+  def sign_message
+    pkey = OpenSSL::PKey::RSA.new(current_user.private_key)
+    message = Message.find(params[:message_id])
+    message.sign_content(pkey)
+    message.save
   end
 end

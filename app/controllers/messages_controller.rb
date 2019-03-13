@@ -1,7 +1,7 @@
 class MessagesController < ApplicationController
   before_action :set_message, only: [:edit, :update, :destroy]
-  before_action :logged_in_user, only: [:create, :destroy, :sign_content]
-  before_action :correct_user, only: [:destroy, :sign_content]
+  before_action :logged_in_user, only: [:create, :destroy]
+  before_action :correct_user, only: [:destroy]
 
   def create
     @message = current_user.messages.build(message_params)
@@ -16,11 +16,11 @@ class MessagesController < ApplicationController
 
   # GET /messages/:id/edit
   def edit
-    if multi_factor_enabled
-    else
+    unless multi_factor_enabled
       flash[:error] = "Activate multi factor authentication to sign messages!"
       redirect_to root_url
     end
+    initialize_u2f_authentication if current_user.u2f_activated
   end
 
   # PATCH/PUT /messages/:id
@@ -69,5 +69,19 @@ class MessagesController < ApplicationController
 
   def multi_factor_authenticated
     message_params[:authentication_token] == session[:authentication_token] && message_params[:authenticated]
+  end
+
+  def initialize_u2f_authentication
+    # Fetch existing Registrations from your db
+    key_handles = U2fRegistration.all.map(&:key_handle)
+    return 'Need to register first' if key_handles.empty?
+
+    # Generate SignRequests
+    @app_id = u2f.app_id
+    @sign_requests = u2f.authentication_requests(key_handles)
+    @challenge = u2f.challenge
+
+    # Store challenge. We need it for the verification step
+    session[:challenge] = @challenge
   end
 end

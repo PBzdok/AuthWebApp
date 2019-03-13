@@ -1,0 +1,40 @@
+<div class="modal fade" id="u2f_authentication_modal" tabindex="-1" role="dialog" aria-labelledby="u2f_modal_label">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="u2f_modal_label">U2F authentication</h4>
+      </div>
+      <div class="modal-body">
+        <p>Please activate the security key device...</p>
+        <form action="/u2f_authentication" method="post" id="hidden_u2f_authentication_form">
+          <input type="hidden" name="response">
+          <input type="hidden" name="message_id" value="<%= @message.id %>">
+        </form>
+
+        <script>
+            // render requests from server into Javascript format
+            var signRequests = <%= @sign_requests.to_json.html_safe %>;
+            var challenge = <%= @challenge.to_json.html_safe %>;
+            var appId = <%= @app_id.to_json.html_safe %>;
+            var message_id = location.pathname.split("/")[2];
+
+            u2f.sign(appId, challenge, signRequests, function (signResponse) {
+                var form, reg;
+
+                if (signResponse.errorCode) {
+                    return alert("Authentication error: " + signResponse.errorCode);
+                }
+
+                form = document.getElementById('hidden_u2f_authentication_form');
+                response = document.querySelector('[name=response]');
+
+                response.value = JSON.stringify(signResponse);
+                form.submit();
+            });
+        </script>
+      </div>
+    </div>
+  </div>
+</div>

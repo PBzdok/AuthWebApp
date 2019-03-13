@@ -9,7 +9,6 @@ Rails.application.routes.draw do
   post '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
   post '/u2f_registration', to: 'u2f_registrations#create'
-  get '/u2f_authentication', to: 'u2f_authentications#new'
   post '/u2f_authentication', to: 'u2f_authentications#create'
   resources :users do
     get :verify_otp, on: :member

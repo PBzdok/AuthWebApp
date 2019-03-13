@@ -38,11 +38,11 @@ $('#verify_top_btn').on('click', function () {
     });
 });
 
-$('#sign_button').on('click', function () {
-    $('#authentication_modal').modal();
+$('#sign_button_totp').on('click', function () {
+    $('#totp_authentication_modal').modal();
 });
 
-$('#authenticate_otp_btn').on('click', function () {
+$('#totp_authenticate_otp_btn').on('click', function () {
     const message_id = location.pathname.split("/")[2];
     let user_id = document.getElementById("user_id").innerText;
     let totp = document.getElementById("otp").value;
@@ -57,7 +57,7 @@ $('#authenticate_otp_btn').on('click', function () {
         dataType: "json",
         success: function (data) {
             if (data["totp_valid"]) {
-                $('#authentication_modal').modal('hide');
+                $('#totp_authentication_modal').modal('hide');
                 alert("TOTP successfully confirmed!");
                 $.ajax({
                     type: "PATCH",
